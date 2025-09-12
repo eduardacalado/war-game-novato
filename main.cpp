@@ -127,7 +127,7 @@ void atacar(Territorio* atacante, Territorio* defensor) {
         defensor->tropas -= 1;
         atacante->tropas += 1;
         if (defensor->tropas <= 0) {
-            printf("O DEFENSOR FOI DERROTAADO! O território agora pertence ao atacante.\n");
+            printf("CONQUISTA! O território %S foi dominado pelo Exército %s!.\n", defensor->nome, atacante->cor);
             strcpy(defensor->cor, atacante->cor);
             defensor->tropas = 1;
         }
