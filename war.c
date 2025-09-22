@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "war.h"
 
 #define MAX_NOME 30
 #define MAX_COR 10
@@ -13,12 +14,12 @@ typedef struct {
     int tropas;
 } Territorio;
 
-Territorio* cadastrarTerritorios();
-void exibirTerritorios(const Territorio* territorios, int quantidade);
-void atacar(Territorio* atacante, Territorio* defensor);
-void liberarMemoria(Territorio* mapa);
+static Territorio* cadastrarTerritorios();
+static void exibirTerritorios(const Territorio* territorios, int quantidade);
+static void atacar(Territorio* atacante, Territorio* defensor);
+static void liberarMemoria(Territorio* mapa);
 
-int main(void) {
+void jogarWar() {
     srand(time(NULL));
 
     printf("========================================\n");
@@ -58,9 +59,9 @@ int main(void) {
             atacar(&territorios[idxAtacante], &territorios[idxDefensor]);
             printf("\n--- Estado atualizado do mapa ---\n");
             exibirTerritorios(territorios, MAX_TERRITORIOS);
-            } else {
-                printf("\nAtaque inválido: verifique os índices e as cores.\n");
-            }
+        } else {
+            printf("\nAtaque inválido: verifique os índices e as cores.\n");
+        }
 
         printf("\n\nPressione Enter para continuar para o próximo turno...");
         getchar();
@@ -68,11 +69,10 @@ int main(void) {
     }
 
     liberarMemoria(territorios);
-    return 0;
 }
 
 
-Territorio* cadastrarTerritorios() {
+static Territorio* cadastrarTerritorios() {
     Territorio* territorios = (Territorio*) calloc(MAX_TERRITORIOS, sizeof(Territorio));
     if (!territorios) {
         printf("Erro ao alocar memória.\n");
@@ -107,13 +107,14 @@ Territorio* cadastrarTerritorios() {
     return territorios;
 }
 
-void exibirTerritorios(const Territorio* territorios, int quantidade) {
+static void exibirTerritorios(const Territorio* territorios, int quantidade) {
     for (int i = 0; i < quantidade; i++) {
-        printf("\n%d. %s (Exército %s, Tropas: %d)", i + 1, territorios[i].nome, territorios[i].cor, territorios[i].tropas);
+        printf("\n%d. %s (Exército %s, Tropas: %d)",
+               i + 1, territorios[i].nome, territorios[i].cor, territorios[i].tropas);
     }
 }
 
-void atacar(Territorio* atacante, Territorio* defensor) {
+static void atacar(Territorio* atacante, Territorio* defensor) {
     printf("\n--- RESULTADO DA BATALHA ---");
 
     int dadoAtacante = (rand() % 6) + 1;
@@ -127,7 +128,8 @@ void atacar(Territorio* atacante, Territorio* defensor) {
         defensor->tropas -= 1;
         atacante->tropas += 1;
         if (defensor->tropas <= 0) {
-            printf("CONQUISTA! O território %S foi dominado pelo Exército %s!.\n", defensor->nome, atacante->cor);
+            printf("CONQUISTA! O território %s foi dominado pelo Exército %s!\n",
+                   defensor->nome, atacante->cor);
             strcpy(defensor->cor, atacante->cor);
             defensor->tropas = 1;
         }
@@ -139,6 +141,6 @@ void atacar(Territorio* atacante, Territorio* defensor) {
     }
 }
 
-void liberarMemoria(Territorio* mapa) {
+static void liberarMemoria(Territorio* mapa) {
     free(mapa);
 }
