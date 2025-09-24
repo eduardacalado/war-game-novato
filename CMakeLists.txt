@@ -7,4 +7,6 @@ add_executable(untitled main.c
         war.c
         war.h
         torre.c
-        torre.h)
+        torre.h
+        tetris.c
+        tetris.h)
