@@ -20,23 +20,12 @@ int main() {
         scanf("%d", &opcao);
 
         switch (opcao) {
-            case 1:
-                jogarWar();
-                break;
-            case 2:
-                jogarTorre();
-                break;
-            case 3:
-                jogarTetris();
-                break;
-            case 4:
-                jogarDetective();
-                break;
-            case 0:
-                printf("Encerrando o programa...\n");
-                break;
-            default:
-                printf("Opção inválida!\n");
+            case 1: jogarWar(); break;
+            case 2: jogarTorre(); break;
+            case 3: jogarTetris(); break;
+            case 4: jogarDetective(); break; // versão única já com pistas
+            case 0: printf("Encerrando o programa...\n"); break;
+            default: printf("Opção inválida!\n");
         }
     } while (opcao != 0);
 
