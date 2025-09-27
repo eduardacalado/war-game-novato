@@ -9,4 +9,6 @@ add_executable(untitled main.c
         torre.c
         torre.h
         tetris.c
-        tetris.h)
+        tetris.h
+        detective.c
+        detective.h)

@@ -2,6 +2,7 @@
 #include "war.h"
 #include "torre.h"
 #include "tetris.h"
+#include "detective.h"
 
 int main() {
     int opcao;
@@ -13,6 +14,7 @@ int main() {
         printf("1. Jogar WAR\n");
         printf("2. Torre de Fuga\n");
         printf("3. Tetris Stack\n");
+        printf("4. Detective Quest\n");
         printf("0. Sair\n");
         printf("Escolha o jogo: ");
         scanf("%d", &opcao);
@@ -26,6 +28,9 @@ int main() {
                 break;
             case 3:
                 jogarTetris();
+                break;
+            case 4:
+                jogarDetective();
                 break;
             case 0:
                 printf("Encerrando o programa...\n");
