@@ -3,6 +3,12 @@
 #include <string.h>
 #include <time.h>
 
+/*
+ * mostrarInventario()
+ * Exibe todos os componentes atualmente armazenados na mochila (inventário).
+ * - Mostra em formato de tabela com Nome, Tipo, Quantidade e Prioridade.
+ * - Se o inventário estiver vazio, mostra aviso ao jogador.
+ */
 void mostrarInventario(Componente comp[], int qtd) {
     if (qtd == 0) {
         printf("\n📦 Inventário vazio.\n");
@@ -29,7 +35,13 @@ void mostrarInventario(Componente comp[], int qtd) {
     getchar(); getchar();
 }
 
-
+/*
+ * adicionarComponente()
+ * Permite ao jogador coletar um novo componente.
+ * - Coleta Nome, Tipo, Quantidade e Prioridade.
+ * - Faz validações para garantir dados corretos (ex.: qtd > 0, prioridade entre 1 e 5).
+ * - Adiciona componente à mochila e exibe o inventário atualizado.
+ */
 void adicionarComponente(Componente comp[], int *qtd) {
     if (*qtd >= MAX_COMP) {
         printf("Inventário cheio!\n");
@@ -37,7 +49,7 @@ void adicionarComponente(Componente comp[], int *qtd) {
     }
 
     printf("\n--- Coletando novo componente ---\n");
-    getchar();
+    getchar(); // limpa buffer antes da leitura com fgets
 
     printf("Nome: ");
     fgets(comp[*qtd].nome, MAX_NOME, stdin);
@@ -49,32 +61,39 @@ void adicionarComponente(Componente comp[], int *qtd) {
 
     int val;
     char buffer[50];
+
+    // Entrada validada de quantidade
     do {
         printf("Quantidade: ");
         fgets(buffer, sizeof(buffer), stdin);
         if (sscanf(buffer, "%d", &val) != 1 || val <= 0) {
             printf("Valor inválido! Digite um número inteiro maior que 0.\n");
-            val = -1; // garante que o loop continue
+            val = -1;
         }
     } while (val <= 0);
     comp[*qtd].quantidade = val;
 
+    // Entrada validada de prioridade
     do {
         printf("Prioridade (1-5): ");
         fgets(buffer, sizeof(buffer), stdin);
         if (sscanf(buffer, "%d", &val) != 1 || val < 1 || val > 5) {
             printf("Valor inválido! Digite um número entre 1 e 5.\n");
-            val = 0; // garante que o loop continue
+            val = 0;
         }
     } while (val < 1 || val > 5);
     comp[*qtd].prioridade = val;
 
     (*qtd)++;
-
     mostrarInventario(comp, *qtd);
 }
 
-
+/*
+ * descartarComponente()
+ * Remove um item da mochila com base no índice escolhido pelo jogador.
+ * - Mostra inventário antes da remoção.
+ * - Reorganiza os elementos (shift à esquerda) para evitar "buracos".
+ */
 void descartarComponente(Componente comp[], int *qtd) {
     if (*qtd == 0) {
         printf("Inventário vazio!\n");
@@ -98,7 +117,11 @@ void descartarComponente(Componente comp[], int *qtd) {
     printf("Componente descartado!\n");
 }
 
-
+/*
+ * bubbleSortNome()
+ * Ordena os componentes pelo campo "nome" usando o algoritmo Bubble Sort.
+ * - Conta o número de comparações realizadas.
+ */
 void bubbleSortNome(Componente comp[], int qtd, int *comparacoes) {
     *comparacoes = 0;
     for (int i = 0; i < qtd - 1; i++) {
@@ -113,6 +136,10 @@ void bubbleSortNome(Componente comp[], int qtd, int *comparacoes) {
     }
 }
 
+/*
+ * insertionSortTipo()
+ * Ordena os componentes pelo campo "tipo" usando o algoritmo Insertion Sort.
+ */
 void insertionSortTipo(Componente comp[], int qtd, int *comparacoes) {
     *comparacoes = 0;
     for (int i = 1; i < qtd; i++) {
@@ -127,6 +154,10 @@ void insertionSortTipo(Componente comp[], int qtd, int *comparacoes) {
     }
 }
 
+/*
+ * selectionSortPrioridade()
+ * Ordena os componentes pela prioridade de montagem (decrescente).
+ */
 void selectionSortPrioridade(Componente comp[], int qtd, int *comparacoes) {
     *comparacoes = 0;
     for (int i = 0; i < qtd - 1; i++) {
@@ -145,6 +176,12 @@ void selectionSortPrioridade(Componente comp[], int qtd, int *comparacoes) {
     }
 }
 
+/*
+ * buscaBinariaPorNome()
+ * Busca um componente pelo nome usando algoritmo de busca binária.
+ * - Requer que o inventário esteja ordenado por nome.
+ * - Retorna o índice do componente ou -1 se não encontrado.
+ */
 int buscaBinariaPorNome(Componente comp[], int qtd, char chave[], int *comparacoes) {
     int inicio = 0, fim = qtd - 1;
     *comparacoes = 0;
@@ -160,11 +197,19 @@ int buscaBinariaPorNome(Componente comp[], int qtd, char chave[], int *comparaco
     return -1;
 }
 
+/*
+ * jogarTorre()
+ * Função principal da Torre de Fuga (nível mestre).
+ * - Gerencia a mochila (inventário).
+ * - Permite adicionar, descartar, listar e ordenar componentes.
+ * - Inclui busca binária por nome.
+ * - Menu interativo até o jogador ativar a torre (sair).
+ */
 void jogarTorre() {
     Componente mochila[MAX_COMP];
     int qtd = 0;
     int opcao;
-    int ordenadoPorNome = 0;
+    int ordenadoPorNome = 0; // flag necessária para permitir busca binária
 
     do {
         printf("\n=====================================================\n");
@@ -180,6 +225,7 @@ void jogarTorre() {
         printf("5. Busca binária por componente-chave (nome)\n");
         printf("0. ATIVAR TORRE DE FUGA (sair)\n");
         printf("-------------------------------------------------------\n");
+
         char buffer[10];
         printf("Escolha uma opção: ");
         fgets(buffer, sizeof(buffer), stdin);
@@ -188,7 +234,6 @@ void jogarTorre() {
             printf("Opção inválida! Digite um número.\n");
             continue;
         }
-
 
         int comparacoes;
         char chave[MAX_NOME];
@@ -256,7 +301,7 @@ void jogarTorre() {
                     break;
                 }
 
-                getchar(); // limpa buffer
+                getchar(); // limpa buffer antes de fgets
                 printf("\n--- Busca binaria por componente-chave ---");
                 printf("\nNome do componente a buscar: ");
                 fgets(chave, MAX_NOME, stdin);
@@ -286,4 +331,3 @@ void jogarTorre() {
         }
     } while (opcao != 0);
 }
-
